@@ -30,18 +30,20 @@ public class User {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
-	@Column(nullable=false, length=30, unique=true)
+	@Column(nullable=false, length=100, unique=true)
 	private String username;
 
 	@Column(nullable=false, length=100)
 	private String password;
 
-	@Column(nullable=false, length=50)
+	@Column(nullable=false, length=100)
 	private String email;
 	
 	//@ColumnDefault("user")
 	@Enumerated(EnumType.STRING)
 	private RoleType role;
+	
+	private String oauth;
 	
 	@CreationTimestamp
 	private Timestamp createDate;

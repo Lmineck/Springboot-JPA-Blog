@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.mineck.blog.model.Board;
+import com.mineck.blog.model.Reply;
 import com.mineck.blog.model.RoleType;
 import com.mineck.blog.model.User;
 import com.mineck.blog.repository.BoardRepository;
+import com.mineck.blog.repository.ReplyRepository;
 import com.mineck.blog.repository.UserRepository;
 
 @Service
@@ -23,6 +25,9 @@ public class BoardService {
 	
 	@Autowired
 	private BoardRepository boardRepository;
+	
+	@Autowired
+	private ReplyRepository replyRepository;
 	
 	@Transactional
 	public void 글쓰기(Board board, User user) {
@@ -57,5 +62,22 @@ public class BoardService {
 				});
 		board.setTitle(requestBoard.getTitle());
 		board.setContent(requestBoard.getContent());
+	}
+	
+	@Transactional
+	public void 댓글쓰기(User user, int boardId, Reply requestReply) {
+		Board board = boardRepository.findById(boardId).orElseThrow(()->{
+			return new IllegalArgumentException("댓글 쓰기 실패 : 게시글 id를 찾을 수 없습니다.");
+		});
+		
+		requestReply.setUser(user);
+		requestReply.setBoard(board);
+		
+		replyRepository.save(requestReply);
+	}
+	
+	@Transactional
+	public void 댓글삭제(int replyId) {
+		replyRepository.deleteById(replyId);
 	}
 }
